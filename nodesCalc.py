@@ -1,52 +1,50 @@
 import json
 
-
-def layerCalc():
+def integerInput(message):
     while True:
         try:
-            numberOfHiddenLayer = int(input('Enter amount of hidden layer... '))
+            var = int(input(message))
             break
         except ValueError:
-            print("Please Enter a Number !")
+            print('Only receive integer!')
+    return var
+
+def readJson(myFile = 'layerStruct.json'):
+    with open(myFile, mode = 'r') as file:
+        return json.load(file)
+
+def writeJson(rawFile, myFile = 'layerStruct.json'):
+    jsonFile = json.dumps(rawFile)
+    with open(myFile, mode = 'w') as file:
+        file.write(jsonFile)
+
+def layerCalc():
+    numberOfHiddenLayer = integerInput('Enter amount of hidden layer... ')
     layerStruct = {
                 "hiddenLayer" : numberOfHiddenLayer,
                 "totalLayer" : numberOfHiddenLayer + 2
             }
-    json_layerStruct = json.dumps(layerStruct)
-    with open('layerStruct.json', mode = 'w') as file:
-        file.write(json_layerStruct)
+    writeJson(layerStruct)
 
 def featureCalc():
-    with open('layerStruct.json', mode = 'r') as file:
-        layerStruct = json.load(file)
+    layerStruct = readJson()
     feature = ('Input', 'Output')
     for i in range(int(len(feature))):
-        while True:
-            try:
-                numberOfFeature = int(input('Enter amount of ' + feature[i] +'... '))
-                break
-            except ValueError:
-                print('Plaase Enter a Number!')
+        numberOfFeature = integerInput('Enter amount of ' + feature[i] +'... ')
         layerStruct.update({
             feature[i] : numberOfFeature
         })
-    json_layerStruct = json.dumps(layerStruct)
-    with open('layerStruct.json', mode = 'w') as file:
-        file.write(json_layerStruct)
+    writeJson(layerStruct)
 
 def nodesCalc():
-    with open('layerStruct.json', mode = 'r') as file:
-        layerStruct = json.load(file)
+    layerStruct = readJson()
     for i in range(layerStruct['hiddenLayer']):
-        while True:
-            try:
-                hiddenLayerAmount = int(input('Enter amount of nodes in layer ' + str(i + 1) + '... '))
-                break
-            except ValueError:
-                print('Please Enter a Number !')
+        hiddenLayerAmount = integerInput('Enter amount of nodes in layer ' + str(i + 1) + '... ')
         layerStruct.update({
             'nodes' + str(i + 1) : hiddenLayerAmount
         })
-    json_layerStruct = json.dumps(layerStruct)
-    with open('layerStruct.json', mode = 'w') as file:
-        file.write(json_layerStruct)
+    writeJson(layerStruct)
+
+layerCalc()
+featureCalc()
+nodesCalc()
